@@ -2,6 +2,7 @@
 DROP TABLE fuel_source;
 DROP TABLE industries;
 DROP TABLE states;
+DROP TABLE financial_year;
 
 DROP TABLE state_production;
 DROP TABLE state_consumption;
@@ -37,14 +38,14 @@ CREATE TABLE state_production (
 	state TEXT REFERENCES states (state),
 	fuel_id INT REFERENCES fuel_source (fuel_id),
 	energy_production_gwh NUMERIC,
-	PRIMARY KEY (year_id, state)
+	PRIMARY KEY (year_id, state, fuel_id)
 );
 
 CREATE TABLE state_consumption (
 	year_id INT REFERENCES financial_year (year_id),
 	state TEXT REFERENCES states (state),
 	population INT,
-	gsp_$_million INT,
+	gsp_$_million NUMERIC,
 	energy_consumption_pj NUMERIC,
 	PRIMARY KEY (year_id, state)
 );
@@ -63,7 +64,7 @@ CREATE TABLE industry_consumption (
 	state TEXT REFERENCES states (state),
 	industry_id INT REFERENCES industries (industry_id),
 	energy_consumption_pj NUMERIC,
-	PRIMARY KEY (year_id, state)
+	PRIMARY KEY (year_id, state, industry_id)
 );
 
 
