@@ -31,7 +31,7 @@ def home():
 
 @app.route("/view_api")
 def db_test():
-    view_name = "state_production"
+    view_name = "state_production_data"
     d3_view = getview(view_name)
     return jsonify(d3_view)
     
