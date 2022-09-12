@@ -25,11 +25,11 @@ def getview(view_name):
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/stateproduction")
 def home():
-    return render_template("index.html")
+    return render_template("state_production.html")
 
-@app.route("/view_api")
+@app.route("/api/stateproduction")
 def db_test():
     view_name = "state_production_data"
     d3_view = getview(view_name)
