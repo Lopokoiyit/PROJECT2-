@@ -8,13 +8,14 @@ import pandas as pd
 import psycopg2
 import sys
 
-def getview(view_name):
-    con = psycopg2.connect("host='localhost' dbname='australian_energy_db' user='postgres' password='password'")  
+def getview(population_consumption):
+    con = psycopg2.connect("host='localhost' dbname='australian_energy_db' user='postgres' password='postgres'")  
     cur = con.cursor()
-    cur.execute(f'select * from  {view_name}')
+    cur.execute(f'select * from  {population_consumption}')
     view = cur.fetchall()
     headings = [x[0] for x in cur.description]
     d3_view=[]
+    
     for array in view:
         row = dict(zip(headings, array))
         d3_view.append(row)
@@ -31,7 +32,7 @@ def home():
 
 @app.route("/view_api")
 def db_test():
-    view_name = "state_production"
+    view_name = "population_consumption"
     d3_view = getview(view_name)
     return jsonify(d3_view)
     
