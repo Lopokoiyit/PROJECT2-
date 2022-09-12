@@ -45,6 +45,22 @@ d3.json(url).then(function(response) {
    // the first year of data will be used throughout to set up the graph
    const startYear = fin_years[0]
 
+   function yLimit (data, state) {
+        const state_production = data.filter((v,i) => {
+            return (v["state"] == state)
+        });
+        const total_output = [...new Set(state_production.map(row => row.energy_production_gwh))]
+
+        const max_output = Math.max(...total_output)
+
+        const yLim = Math.ceil(max_output/10000)*10000
+
+        return yLim   
+   };
+
+   var testy = yLimit(response, states[0])
+   console.log("testy: ", testy)
+
     // function to get total energy output for a particular state and year
     function getStateTotal(data, year, state) {
         const state_production = data.filter((v,i) => {
@@ -211,12 +227,13 @@ d3.json(url).then(function(response) {
         const data_update = {
             y: [y_values],
             name: state,
+            text: y_values.map(String)
         };
 
         const layout_update = {
             title: `${state} energy production mix`,
         }
-        Plotly.update('dbtest', data_update, layout_update)
+        Plotly.restyle('dbtest', data_update, layout_update)
         // create new frames for the new state
         frames = []
         years.forEach(finyear => {
