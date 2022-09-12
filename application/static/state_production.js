@@ -28,18 +28,18 @@ d3.json(url).then(function(response) {
    });
 
     // custom bar colours
-    colors =['rgb(54, 54, 50)',
-    'rgb(65, 66, 51)',
-    'rgb(74, 78, 52)',
-    'rgb(83, 91, 53)',
-    'rgb(91, 104, 54)',
-    'rgb(98, 118, 55)',
-    'rgb(104, 132, 56)',
-    'rgb(109, 147, 58)',
-    'rgb(113, 162, 60)',
-    'rgb(116, 177, 62)',
-    'rgb(117, 193, 66)',
-    'rgb(116, 209, 70)',
+    colors =['rgb(84, 105, 230)',
+        'rgb(0, 126, 250)',
+        'rgb(0, 144, 255)',
+        'rgb(0, 160, 255)',
+        'rgb(0, 175, 255)',
+        'rgb(0, 188, 253)',
+        'rgb(0, 200, 235)',
+        'rgb(0, 210, 213)',
+        'rgb(0, 220, 187)',
+        'rgb(0, 228, 159)',
+        'rgb(0, 235, 132)',
+        'rgb(117, 240, 107)' 
    ]
 
    // the first year of data will be used throughout to set up the graph
@@ -57,9 +57,6 @@ d3.json(url).then(function(response) {
 
         return yLim   
    };
-
-   var testy = yLimit(response, states[0])
-   console.log("testy: ", testy)
 
     // function to get total energy output for a particular state and year
     function getStateTotal(data, year, state) {
@@ -168,9 +165,12 @@ d3.json(url).then(function(response) {
             sliderSteps.push(step)
         });
 
+        const yLim = yLimit(data,state)
+
         var layout = {
             title: `${state} energy production mix`,
             height: 800,
+            yaxis: {range:yLim},
             sliders: [{
                 activebgcolor: 'rgb(219, 7, 61)',
                 currentvalue: {
@@ -197,7 +197,7 @@ d3.json(url).then(function(response) {
                         mode: 'immediate',
                         fromcurrent: true,
                         transition: {duration: 300},
-                        frame: {duration: 1200, redraw: false}
+                        frame: {duration: 1000, redraw: false}
                     }]
                 }, {
                     label: 'Pause',
@@ -230,10 +230,13 @@ d3.json(url).then(function(response) {
             text: y_values.map(String)
         };
 
+        const yLim = yLimit(data,state)
+
         const layout_update = {
             title: `${state} energy production mix`,
+            yaxis: {range: [0, yLim]}          
         }
-        Plotly.restyle('dbtest', data_update, layout_update)
+        Plotly.update('dbtest', data_update, layout_update)
         // create new frames for the new state
         frames = []
         years.forEach(finyear => {
@@ -242,9 +245,6 @@ d3.json(url).then(function(response) {
         })
 
         Plotly.addFrames('dbtest', frames)
-
-
-
     }
 
     // create graph on landing and set up event change
