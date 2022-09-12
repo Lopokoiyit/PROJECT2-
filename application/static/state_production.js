@@ -42,7 +42,20 @@ d3.json(url).then(function(response) {
     'rgb(116, 209, 70)',
    ]
 
+   // the first year of data will be used throughout to set up the graph
+   const startYear = fin_years[0]
+
     // function to get total energy output for a particular state and year
+    function getStateTotal(data, year, state) {
+        const state_production = data.filter((v,i) => {
+            return (v["financial_year"] == year && v["state"] == state)
+        });
+        const state_total = state_production.reduce((accumulator, object) => {
+            return accumulator + object.energy_production_gwh
+        }, 0);
+        return state_total  
+    };
+     // function to return highest output of a fuel to set y axis
     function getStateTotal(data, year, state) {
         const state_production = data.filter((v,i) => {
             return (v["financial_year"] == year && v["state"] == state)
@@ -140,8 +153,8 @@ d3.json(url).then(function(response) {
         });
 
         var layout = {
+            title: `${state} energy production mix`,
             height: 800,
-            
             sliders: [{
                 activebgcolor: 'rgb(219, 7, 61)',
                 currentvalue: {
@@ -189,8 +202,38 @@ d3.json(url).then(function(response) {
         })
     };
 
+    function updateGraph(data, startYear, years, fuels) {
+        // set state as selected
+        const state = stateDropdown.property("value")
+        console.log("value: ", stateDropdown.property("value"))
+        // change existing trace to that of new state
+        const y_values = fuelOutput(data, startYear, state, fuels)
+        const data_update = {
+            y: [y_values],
+            name: state,
+        };
+
+        const layout_update = {
+            title: `${state} energy production mix`,
+        }
+        Plotly.update('dbtest', data_update, layout_update)
+        // create new frames for the new state
+        frames = []
+        years.forEach(finyear => {
+            var frame = createFrame(data, finyear, state, fuels)
+            frames.push(frame)
+        })
+
+        Plotly.addFrames('dbtest', frames)
+
+
+
+    }
+
     // create graph on landing and set up event change
-    const startYear = fin_years[0]
     createGraph(response, startYear, fuel_types)
-    d3.selectAll("selState").on("change", updateGraph(response, startYear, fuel_types))
+    // update the graph when the state is changed
+   stateDropdown.on("change", function() {
+    updateGraph(response, startYear, fin_years, fuel_types)
+   });
 });
