@@ -28,18 +28,18 @@ d3.json(url).then(function(response) {
    });
 
     // custom bar colours
-    colors =['rgb(84, 105, 230)',
-        'rgb(0, 126, 250)',
-        'rgb(0, 144, 255)',
-        'rgb(0, 160, 255)',
-        'rgb(0, 175, 255)',
-        'rgb(0, 188, 253)',
-        'rgb(0, 200, 235)',
-        'rgb(0, 210, 213)',
-        'rgb(0, 220, 187)',
-        'rgb(0, 228, 159)',
-        'rgb(0, 235, 132)',
-        'rgb(117, 240, 107)' 
+    colors =['rgb(229, 60, 60)',
+        'rgb(238, 77, 54)',
+        'rgb(246, 94, 47)',
+        'rgb(252, 111, 38)',
+        'rgb(255, 127, 28)',
+        'rgb(255, 144, 13)',
+        'rgb(255, 161, 0)',
+        'rgb(255, 178, 0)',
+        'rgb(255, 195, 0)',
+        'rgb(255, 212, 0)',
+        'rgb(254, 228, 0)',
+        'rgb(248, 245, 0) '
    ]
 
    // the first year of data will be used throughout to set up the graph
@@ -57,6 +57,10 @@ d3.json(url).then(function(response) {
 
         return yLim   
    };
+
+   var testy = yLimit(response,states[5])
+   console.log("testy: ", testy)
+   console.log("sphapf: ", states[5])
 
     // function to get percent renewable energy output for selected state and year
     function getRenewable(data, year, state) {
@@ -77,11 +81,6 @@ d3.json(url).then(function(response) {
 
         return renewable
     };
-
-    var testy = getRenewable(response,startYear, states[0])
-    console.log("testy: ", testy)
-
- 
     
     // function to return output of each fuel for a particular state and year
     function fuelOutput(data, year, state, fuels) {
@@ -135,15 +134,17 @@ d3.json(url).then(function(response) {
     // each frame is similar to a trace, but contains only the data that needs to change
     // one frame for each change that will take place. this case the y values (the fuel production for the changed year)
     function createFrame(data, year, state, fuels) {
-        var y_values = fuelOutput(data, year, state, fuels)
-        var frame ={
+        const y_values = fuelOutput(data, year, state, fuels)
+        const y_renewable = getRenewable(data, year, state)
+        const frame ={
             name: year,
             data: [{
                 y: y_values,
                 text: y_values.map(String),
                 textposition: 'auto',
                 },{
-                y: [getRenewable(data, year, state)],
+                y: [y_renewable],
+                text:`${String(Math.floor(y_renewable*100))}%`,
                 yaxis: 'y2',
                 xaxis: 'x2'
             }]};
@@ -158,11 +159,15 @@ d3.json(url).then(function(response) {
         var traces =[]
         traces.push(createTrace(data, startYear, state, fuels))
 
+        const y_renewable = getRenewable(data, startYear, state)
         renewable_trace = {
             x: ["Renewable"],
-            y: [getRenewable(data, startYear, state)],
+            y: [y_renewable],
             xaxis: 'x2',
             yaxis: 'y2',
+            marker: {color: 'rgb(69, 191, 85)'},
+            text: `${String(Math.floor(y_renewable*100))}%`,
+            textposition: 'auto',
             type: 'bar'
         }
 
@@ -189,8 +194,9 @@ d3.json(url).then(function(response) {
             height: 800,
             showlegend: false,
             yaxis: {
-                range:yLim,
-                title: "Production (GWh)"
+                range:[0, yLim],
+                title: "Production (GWh)",
+                tickformat: ",.2r"
             },
             yaxis2: {
                 range: [0, 1],
@@ -198,8 +204,7 @@ d3.json(url).then(function(response) {
                 tickformat: '%',
                 position: 1},
             xaxis: {
-                domain: [0,0.85],
-                title: "Fuel Source"
+                domain: [0,0.85]
             },
             xaxis2: {
                 domain: [0.90,0.95]
@@ -254,15 +259,21 @@ d3.json(url).then(function(response) {
     function updateGraph(data, startYear, years, fuels) {
         // set state as selected
         const state = stateDropdown.property("value")
-        console.log("value: ", stateDropdown.property("value"))
+  
+          
         // change existing trace to that of new state
         const y_values = fuelOutput(data, startYear, state, fuels)
+        console.log("y vals: ", y_values)
         const y_renewable = getRenewable(data,startYear,state)
-        const data_update = {
+        const data_update = [{
             y: [y_values],
             name: state,
             text: y_values.map(String)
-        };
+        },{
+            y: [y_renewable],
+            yaxis: 'y2',
+            text: String(y_renewable)
+        }];
 
         const yLim = yLimit(data,state)
 
@@ -273,21 +284,34 @@ d3.json(url).then(function(response) {
                 title: "Production (GWh)"
             }       
         }
-        Plotly.update('dbtest', data_update, layout_update, [0,2])
+
+        Plotly.update('dbtest', data_update, layout_update)
+
         // create new frames for the new state
         frames = []
         years.forEach(finyear => {
             var frame = createFrame(data, finyear, state, fuels)
             frames.push(frame)
         })
-
         Plotly.addFrames('dbtest', frames)
+      
+    };
+
+    function updateGraphBAD(data, startYear, fuels) {
+        Plotly.purge('dbtest')
+        createGraph(data, startYear, fuels)
     }
 
     // create graph on landing and set up event change
     createGraph(response, startYear, fuel_types)
     // update the graph when the state is changed
+//    stateDropdown.on("change", function() {
+//     updateGraph(response, startYear, fin_years, fuel_types)
+//    });
    stateDropdown.on("change", function() {
-    updateGraph(response, startYear, fin_years, fuel_types)
+    updateGraphBAD(response, startYear, fuel_types)
    });
+
+
+
 });
