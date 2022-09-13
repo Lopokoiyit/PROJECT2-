@@ -58,26 +58,30 @@ d3.json(url).then(function(response) {
         return yLim   
    };
 
-    // function to get total energy output for a particular state and year
-    function getStateTotal(data, year, state) {
+    // function to get percent renewable energy output for selected state and year
+    function getRenewable(data, year, state) {
         const state_production = data.filter((v,i) => {
             return (v["financial_year"] == year && v["state"] == state)
         });
         const state_total = state_production.reduce((accumulator, object) => {
             return accumulator + object.energy_production_gwh
         }, 0);
-        return state_total  
-    };
-     // function to return highest output of a fuel to set y axis
-    function getStateTotal(data, year, state) {
-        const state_production = data.filter((v,i) => {
-            return (v["financial_year"] == year && v["state"] == state)
-        });
-        const state_total = state_production.reduce((accumulator, object) => {
+        const renewable_production = state_production.filter((v,i) => {
+            return (v["renewable"] == true)
+        }); 
+        const renewable_total = renewable_production.reduce((accumulator, object) => {
             return accumulator + object.energy_production_gwh
         }, 0);
-        return state_total  
+        const renewable = (renewable_total/state_total)
+        
+
+        return renewable
     };
+
+    var testy = getRenewable(response,startYear, states[0])
+    console.log("testy: ", testy)
+
+ 
     
     // function to return output of each fuel for a particular state and year
     function fuelOutput(data, year, state, fuels) {
@@ -138,8 +142,11 @@ d3.json(url).then(function(response) {
                 y: y_values,
                 text: y_values.map(String),
                 textposition: 'auto',
-                }
-            ]};
+                },{
+                y: [getRenewable(data, year, state)],
+                yaxis: 'y2',
+                xaxis: 'x2'
+            }]};
 
         return frame
     };
@@ -150,6 +157,16 @@ d3.json(url).then(function(response) {
         // create initial trace. changes to trace will be made through frames
         var traces =[]
         traces.push(createTrace(data, startYear, state, fuels))
+
+        renewable_trace = {
+            x: ["Renewable"],
+            y: [getRenewable(data, startYear, state)],
+            xaxis: 'x2',
+            yaxis: 'y2',
+            type: 'bar'
+        }
+
+        traces.push(renewable_trace)
 
         // create frames. each frame is data to change for each year selected
         var frames = []
@@ -170,7 +187,23 @@ d3.json(url).then(function(response) {
         var layout = {
             title: `${state} energy production mix`,
             height: 800,
-            yaxis: {range:yLim},
+            showlegend: false,
+            yaxis: {
+                range:yLim,
+                title: "Production (GWh)"
+            },
+            yaxis2: {
+                range: [0, 1],
+                anchor: 'free',
+                tickformat: '%',
+                position: 1},
+            xaxis: {
+                domain: [0,0.85],
+                title: "Fuel Source"
+            },
+            xaxis2: {
+                domain: [0.90,0.95]
+            },
             sliders: [{
                 activebgcolor: 'rgb(219, 7, 61)',
                 currentvalue: {
@@ -224,6 +257,7 @@ d3.json(url).then(function(response) {
         console.log("value: ", stateDropdown.property("value"))
         // change existing trace to that of new state
         const y_values = fuelOutput(data, startYear, state, fuels)
+        const y_renewable = getRenewable(data,startYear,state)
         const data_update = {
             y: [y_values],
             name: state,
@@ -234,9 +268,12 @@ d3.json(url).then(function(response) {
 
         const layout_update = {
             title: `${state} energy production mix`,
-            yaxis: {range: [0, yLim]}          
+            yaxis: {
+                range: [0, yLim],
+                title: "Production (GWh)"
+            }       
         }
-        Plotly.update('dbtest', data_update, layout_update)
+        Plotly.update('dbtest', data_update, layout_update, [0,2])
         // create new frames for the new state
         frames = []
         years.forEach(finyear => {
