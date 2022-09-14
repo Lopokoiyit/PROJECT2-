@@ -21,11 +21,20 @@ d3.json(url).then(function(response) {
     const fin_years = [...new Set(response.map(row => row.financial_year))];
     console.log("years: ", fin_years);
 
-   // initialise dropbown menu of states
-   const stateDropdown = d3.select("#selState")
-   states.forEach(state => {
-    var stateOption = stateDropdown.append("option").text(state)
-   });
+    // create buttons for eachs state to be used to change graph
+   const stateButtons = d3.select("#stateButtons")
+    .selectAll('button')
+    .data(states)
+
+   stateButtons
+    .enter()
+    .append('button')
+    .attr('class', 'btn btn-primary mr-3')
+    .attr('type', 'button')
+    .attr('value', d => `${d}`)
+    .attr('id', 'stateButton')
+    .text(d=>d)
+  
 
     // custom bar colours
     colors =['rgb(229, 60, 60)',
@@ -44,6 +53,8 @@ d3.json(url).then(function(response) {
 
    // the first year of data will be used throughout to set up the graph
    const startYear = fin_years[0]
+   // state to initialise the graph
+   const initState = states[0]
 
    function yLimit (data, state) {
         const state_production = data.filter((v,i) => {
@@ -58,9 +69,6 @@ d3.json(url).then(function(response) {
         return yLim   
    };
 
-   var testy = yLimit(response,states[5])
-   console.log("testy: ", testy)
-   console.log("sphapf: ", states[5])
 
     // function to get percent renewable energy output for selected state and year
     function getRenewable(data, year, state) {
@@ -153,8 +161,7 @@ d3.json(url).then(function(response) {
     };
 
     // function to create graph
-    function createGraph(data, startYear, fuels) {
-        const state = stateDropdown.property("value")
+    function createGraph(data, state, startYear, fuels) {
         // create initial trace. changes to trace will be made through frames
         var traces =[]
         traces.push(createTrace(data, startYear, state, fuels))
@@ -258,7 +265,8 @@ d3.json(url).then(function(response) {
 
     function updateGraph(data, startYear, years, fuels) {
         // set state as selected
-        const state = stateDropdown.property("value")
+        const state = stateButtons.property("value")
+        console.log("buttonval: ", state)
   
           
         // change existing trace to that of new state
@@ -297,20 +305,23 @@ d3.json(url).then(function(response) {
       
     };
 
-    function updateGraphBAD(data, startYear, fuels) {
+    function updateGraphBAD(data, state, startYear, fuels) {
         Plotly.purge('dbtest')
-        createGraph(data, startYear, fuels)
+        createGraph(data,state, startYear, fuels)
     }
 
     // create graph on landing and set up event change
-    createGraph(response, startYear, fuel_types)
+    createGraph(response, initState, startYear, fuel_types)
     // update the graph when the state is changed
 //    stateDropdown.on("change", function() {
 //     updateGraph(response, startYear, fin_years, fuel_types)
 //    });
-   stateDropdown.on("change", function() {
-    updateGraphBAD(response, startYear, fuel_types)
-   });
+ 
+   d3.selectAll("#stateButton")
+    .on("click", function() {
+        var state = d3.select(this).attr("value");
+        updateGraphBAD(response, state, startYear, fuel_types)
+    });
 
 
 

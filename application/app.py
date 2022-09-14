@@ -25,8 +25,12 @@ def getview(view_name):
 
 app = Flask(__name__)
 
-@app.route("/stateproduction")
+@app.route("/")
 def home():
+    return render_template("base.html")
+
+@app.route("/stateproduction")
+def stateproduction():
     return render_template("state_production.html")
 
 @app.route("/api/stateproduction")
