@@ -34,8 +34,18 @@ def stateproduction():
     return render_template("state_production.html")
 
 @app.route("/api/stateproduction")
-def db_test():
+def state_production_api():
     view_name = "state_production_data"
+    d3_view = getview(view_name)
+    return jsonify(d3_view)
+
+@app.route("/consumptionproduction")
+def consumptionproduction():
+    return render_template("consumption_production.html")
+
+@app.route("/api/consumptionproduction")
+def consumption_production_api():
+    view_name = "consumption_production"
     d3_view = getview(view_name)
     return jsonify(d3_view)
     

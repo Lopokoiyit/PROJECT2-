@@ -1,0 +1,37 @@
+.line {
+    fill: none;
+    stroke-width: 4px;
+  }
+  
+  .production {
+    stroke: green;
+    font-size: 14px;
+  }
+  
+  .consumption {
+    stroke: blue;
+    font-size: 14px;
+  }
+
+  .x {
+    font-size: 14px;
+  }
+
+  .text {
+    font-size: 20px;
+    text-anchor: middle;
+  }
+
+  .consumption-text {
+    fill: blue;
+  }
+  
+  .production-text {
+    fill: green;
+  }
+
+
+  .title-text {
+    font-size: 32px;
+    text-anchor: middle;
+  }

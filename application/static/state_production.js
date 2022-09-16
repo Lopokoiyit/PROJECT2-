@@ -29,7 +29,7 @@ d3.json(url).then(function(response) {
    stateButtons
     .enter()
     .append('button')
-    .attr('class', 'btn btn-primary mr-3')
+    .attr('class', 'btn btn-outline-success mr-3')
     .attr('type', 'button')
     .attr('value', d => `${d}`)
     .attr('id', 'stateButton')
@@ -197,7 +197,10 @@ d3.json(url).then(function(response) {
         const yLim = yLimit(data,state)
 
         var layout = {
-            title: `${state} energy production mix`,
+            title: {
+                text:`${state} energy production mix`,
+                font: {size: 24}
+            },
             height: 800,
             showlegend: false,
             yaxis: {
@@ -322,7 +325,4 @@ d3.json(url).then(function(response) {
         var state = d3.select(this).attr("value");
         updateGraphBAD(response, state, startYear, fuel_types)
     });
-
-
-
 });
