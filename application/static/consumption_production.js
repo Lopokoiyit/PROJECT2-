@@ -29,6 +29,8 @@ const chartWidth = width -margin.left -margin.right;
 //      2. createChart() - add chart under svg
 //      3. xScale() - scale band for categorical x scale
 //      4. yScale() - linear scale for y axis
+//      5. appendPaths() - add lines to the graph
+//      6. updateGraph() - call when changing state
 // ----------------------------------------------------------------------
 // create svg
 function createSvg() {
