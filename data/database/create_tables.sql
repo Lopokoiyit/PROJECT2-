@@ -68,3 +68,13 @@ CREATE TABLE industry_consumption (
 );
 
 
+CREATE TABLE productionVsConsumption AS
+SELECT state_production.year_id,
+  state_production.energy_production_gwh,
+  state_consumption.energy_consumption_pj,
+  state_production.state
+FROM state_production
+INNER JOIN state_consumption ON
+state_production.year_id = state_consumption.year_id;
+
+SELECT * FROM productionVsConsumption

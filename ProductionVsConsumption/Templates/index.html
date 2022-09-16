@@ -12,7 +12,7 @@
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
     crossorigin="anonymous">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="static/style.css">
 
 </head>
 
@@ -27,17 +27,30 @@
       <div class="col-xs-12  col-md-12">
         <h2> Production<h2>
      <div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>production chart</h4>
+        </div>
+        <div class="panel-body">
+            <div id="#linechart1"></div>
+        </div>
+      </div>
+      <script src="static/production.js"></script>
     <div>
       <div class="row">
         <div class="col-xs-12  col-md-12">
           <h2> Consumption<h2>
        <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+              <h4>Consumption Chart</h4>
+          </div>
+          <div class="panel-body">
+              <div id="#linechart2"></div>
+          </div>
+        </div>
+        <script src="static/production.js"></script>
       <div>
-      <!-- Load d3.js -->
-<script src="https://d3js.org/d3.v6.js"></script>
-
-<!-- Create a div where the graph will take place -->
-<div id="production"></div>
   </script>
   </div>
 </div>
@@ -74,9 +87,6 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.js"></script>
-<script type="text/javascript" src="production.js"></script>
-<script type="text/javascript" src="consumption.js"></script>
-
 
 </body>
 

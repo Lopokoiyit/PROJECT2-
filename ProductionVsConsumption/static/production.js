@@ -1,3 +1,12 @@
+function tester() {
+  const url = "/api/consumption_production"
+
+  d3.json(url).then(function(response) {
+      console.log(response);
+
+  })
+};
+
 //<!-- Initialize a select button -->
 <select id="selectButton"></select>
 // set the dimensions and margins of the graph
@@ -6,15 +15,12 @@ const margin = {top: 10, right: 30, bottom: 30, left: 60},
     height = 400 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
-const svg = d3.select("#production")
+const svg = d3.select("#linechart1")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-//Read the data
-d3.csv("production+consumption").then( function(data) {
 
     // List of groups (here I have one group per column)
     const allGroup = new Set(data.map(d => d.state))
@@ -86,5 +92,3 @@ d3.csv("production+consumption").then( function(data) {
         // run the updateChart function with this selected option
         update(selectedOption)
     })
-
-})
