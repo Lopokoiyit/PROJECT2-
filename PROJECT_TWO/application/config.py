@@ -1,0 +1,1 @@
+connection_string = "postgres:password@localhost:5432/australian_energy_db"
