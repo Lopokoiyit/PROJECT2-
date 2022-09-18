@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Production vs Consumption{% endblock %}
+{% block viz %}
+  
+    <div class="row justify-content-center">
+      <div class="col-sm-12 d-flex justify-content-center">
+        <div id="stateButtons">
+        </div>
+      </div>
+    </div>
+
+    <div class = "row justify-content-center">
+      <div class = "col-sm-12 d-flex justify-content-center">
+        <div id = "chart">
+          <!-- place chart here -->
+         
+        </div>
+      </div> 
+    </div>
+  </div>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-6  col-md-4">
+  <div class="article">
+    <h2>Victoria</h2>
+    <p>
+      - <p>
+</div>
+<div class="col-xs-6  col-md-4">
+  <div class="article">
+    <h2>Western Australia</h2>
+    <p>
+      - </p>
+  </div>
+</div>
+<div class="col-xs-6  col-md-4">
+  <div class="article">
+    <h2>NSW</h2>
+    <p>
+      - </p>
+  </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="col-xs-6  col-md-4">
+  <div class="article">
+    <h2>TAS</h2>
+    <p>
+      - </p>
+  </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="col-xs-6  col-md-4">
+  <div class="article">
+    <h2>QLD</h2>
+    <p>
+      - </p>
+  </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="col-xs-6  col-md-4">
+  <div class="article">
+    <h2>SA</h2>
+    <p>
+      - </p>
+  </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% block js %}<script src="{{ url_for('static', filename='consumption_production.js') }}"></script>{% endblock %}
+{% block css %} <link rel="stylesheet" href="{{ url_for('static', filename='css/consumption_production.css') }}">{% endblock %}
+{% block consumptionproductionactive %}active{% endblock %}
+   
+</body>
+</html>
