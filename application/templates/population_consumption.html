@@ -7,14 +7,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <h1> The change in Population and Energy Consumption per State, over time (Years) </h1>
 </head>
 
 <body>
-   <div class = "dbtest">
-      <h1>THIS IS A TEST SITE</h1>
-   </div>
+   <select id="selectButton"></select>
+   <div class = "dbtest"></div>
    <script src="https://d3js.org/d3.v7.min.js"></script>
    <script src="../static/app.js"></script>
    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+   <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 </body>
 </html>
