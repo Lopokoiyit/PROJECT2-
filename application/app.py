@@ -9,7 +9,7 @@ import psycopg2
 import sys
 
 def getview(view_name):
-    con = psycopg2.connect("host='localhost' dbname='australian_energy_db' user='postgres' password='password'")  
+    con = psycopg2.connect("host='localhost' dbname='australian_energy_db' user='postgres' password='postgres'")  
     cur = con.cursor()
     cur.execute(f'select * from  {view_name}')
     view = cur.fetchall()
@@ -35,7 +35,7 @@ def stateproduction():
 
 @app.route("/api/stateproduction")
 def state_production_api():
-    view_name = "state_production_data"
+    view_name = "state_production_view"
     d3_view = getview(view_name)
     return jsonify(d3_view)
 
@@ -56,6 +56,16 @@ def industryconsumption():
 @app.route("/api/industryconsumption")
 def industry_consumption_api():
     view_name = "industry_consumption_view"
+    d3_view = getview(view_name)
+    return jsonify(d3_view)
+
+@app.route("/populationconsumption")
+def populationconsumption():
+    return render_template("population_consumption.html")
+
+@app.route("/api/populationconsumption")
+def population_consumption_api():
+    view_name = "population_consumption"
     d3_view = getview(view_name)
     return jsonify(d3_view)
     
