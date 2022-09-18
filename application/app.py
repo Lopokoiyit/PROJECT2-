@@ -48,6 +48,16 @@ def consumption_production_api():
     view_name = "consumption_production"
     d3_view = getview(view_name)
     return jsonify(d3_view)
+
+@app.route("/industryconsumption")
+def industryconsumption():
+    return render_template("industry_consumption.html")
+
+@app.route("/api/industryconsumption")
+def industry_consumption_api():
+    view_name = "industry_consumption_view"
+    d3_view = getview(view_name)
+    return jsonify(d3_view)
     
 if __name__ == "__main__":
     app.run(debug=True)
