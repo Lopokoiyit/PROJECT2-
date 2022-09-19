@@ -9,7 +9,7 @@ import psycopg2
 import sys
 
 def getview(view_name):
-    con = psycopg2.connect("host='localhost' dbname='australian_energy_db' user='postgres' password='password'")  
+    con = psycopg2.connect("host='localhost' dbname='australian_energy_db' user='postgres' password='postgres'")  
     cur = con.cursor()
     cur.execute(f'select * from  {view_name}')
     view = cur.fetchall()
